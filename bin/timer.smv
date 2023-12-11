@@ -1,0 +1,57 @@
+MODULE main
+VAR
+  interrupt_A: boolean;
+  interrupt_B: boolean;
+  interrupt_C: boolean;
+
+  timer_A: 1..9;
+  timer_B: 1..7;
+  timer_C: 1..5;
+
+ASSIGN
+  init(interrupt_A) := FALSE;
+  init(interrupt_B) := FALSE;
+  init(interrupt_C) := FALSE;
+
+  init(timer_A) := 2;
+  init(timer_B) := 4;
+  init(timer_C) := 1;
+
+  next(interrupt_A) :=
+    case
+      timer_A = 9 : TRUE;
+      TRUE        : FALSE;
+    esac;
+
+  next(timer_A) :=
+    case
+      timer_A < 9 : timer_A + 1;
+      TRUE       : 1;
+    esac;
+
+  next(interrupt_B) :=
+    case
+      timer_B = 7 : TRUE;
+      TRUE        : FALSE;
+    esac;
+
+  next(timer_B) :=
+    case
+      timer_B < 7 : timer_B + 1;
+      TRUE       : 1;
+    esac;
+
+  next(interrupt_C) :=
+    case
+      timer_C = 5 : TRUE;
+      TRUE        : FALSE;
+    esac;
+
+  next(timer_C) :=
+    case
+      timer_C < 5 : timer_C + 1;
+      TRUE       : 1;
+    esac;
+
+SPEC
+  AG !(interrupt_A & interrupt_B & interrupt_C)
