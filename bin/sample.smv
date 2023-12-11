@@ -1,0 +1,24 @@
+MODULE main
+VAR
+  brake: boolean;
+  accelerator: boolean;
+  car_speed: {stopped, slow, moderate, fast};
+
+ASSIGN
+  init(brake) := FALSE;
+  init(accelerator) := FALSE;
+  init(car_speed) := stopped;
+
+  next(car_speed) :=
+    case
+      brake = TRUE: stopped;
+      accelerator = TRUE & car_speed = stopped: slow;
+      accelerator = TRUE & car_speed = slow: moderate;
+      accelerator = TRUE & car_speed = moderate: fast;
+      accelerator = TRUE & car_speed = fast: fast;
+      TRUE: car_speed;
+    esac;
+
+SPEC
+  -- 成立するパターンの例: アクセルが踏まれ、速度が上昇する
+  AF (accelerator = TRUE -> AX car_speed = fast)
