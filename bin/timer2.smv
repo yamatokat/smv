@@ -1,0 +1,58 @@
+MODULE main
+VAR
+  interrupt_A: boolean;
+  interrupt_B: boolean;
+  interrupt_C: boolean;
+
+  timer_A: 1..9;
+  timer_B: 1..7;
+  timer_C: 1..5;
+
+ASSIGN
+  init(interrupt_A) := FALSE;
+  init(interrupt_B) := FALSE;
+  init(interrupt_C) := FALSE;
+
+  init(timer_A) := 2;
+  init(timer_B) := 4;
+  init(timer_C) := 1;
+
+  -- 割り込みa の状態遷移 --
+  next (interrupt_A) :=case
+    timer_A = 9 : TRUE;
+    TRUE        : FALSE;
+  esac; 
+
+  -- 割り込みb の状態遷移-- 
+  next (interrupt_B) :=case
+    timer_B = 7 : TRUE;
+    TRUE        : FALSE;
+  esac; 
+
+  -- 割り込みc の状態遷移-- 
+  next (interrupt_C) :=case
+    timer_C = 5 : TRUE;
+    TRUE        : FALSE;
+  esac; 
+
+  -- TIMER A の状態遷移 --
+  next (timer_A) := case
+    timer_A < 9 : timer_A + 1;
+    timer_A >= 9 : 1;
+    TRUE : timer_A;
+  esac;
+  -- TIMER B の状態遷移 --
+  next (timer_B) := case
+    timer_B < 7 : timer_B + 1;
+    timer_B >= 7 : 1;
+    TRUE : timer_B;
+  esac;
+  -- TIMER C の状態遷移 --
+  next (timer_C) := case
+    timer_C < 5 : timer_C + 1;
+    timer_C >= 5 : 1;
+    TRUE : timer_C;
+  esac;
+
+-- 検査式 --
+SPEC !EF( interrupt_A = TRUE & interrupt_B = TRUE & interrupt_C = TRUE)
